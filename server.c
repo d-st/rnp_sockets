@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
 //---------------------------------------------------------------------------------
 
   const char *Datum = "26.11.2010";
-  int Fehlerkode;		// Hilfsvariable zum Speichern eines Fehlerkodes
   struct protoent *ptrp;		// Speichert den Namen des Transp.Protok.--> winsock.h
   struct sockaddr_in sad;		// Speichert die Serveradresse --> winsock.h
   struct sockaddr_in cad;		// Speichert die Clientadresse --> winsock.h
@@ -55,6 +54,7 @@ int main(int argc, char *argv[])
          sd_client;			// Socketdeskriptor --> Aktive Clientverbindungen
   unsigned short port;		// Portnummer des Servers
 #ifdef WIN32
+  int Fehlerkode;		// Hilfsvariable zum Speichern eines Fehlerkodes
   int struct_size;		// Größe einer Datenstruktur
 #else
   socklen_t struct_size;		// Größe einer Datenstruktur
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 			"The referenced socket is not of type SOCK_STREAM.\n");
 		if(errno == EFAULT) fprintf(stderr,
 			"The addr argument is not in a writable part of the user address space.\n");
-		if(errno == ENOBUFS, ENOMEM) fprintf(stderr,
+		if(errno == ENOBUFS || errno == ENOMEM) fprintf(stderr,
 			"Not enough free memory. This often means that the memory allocation is limited by the socket buffer limits, not by the system memory.\n");
 		if(errno == EPROTO) fprintf(stderr,
 			"Protocol error.\n");

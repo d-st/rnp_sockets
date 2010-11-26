@@ -42,7 +42,6 @@ int main(int argc, char* argv[])
 // Dr. W. Schmitt, 10.12.09
 //--------------------------------------------------------------------------------------
 	const char *Datum = "26.11.2010";
-	int				Fehlerkode;			// Hilfsvariable zum Speichern eines Fehlerkodes
 	char localhost[] = "localhost";		// Default Hostname 
     struct hostent			*ptrh;				// Speichert den Namen des Clientrechners
     struct protoent		*ptrp;				// Speichert den Namen des Transp.Protok.
@@ -56,6 +55,7 @@ int main(int argc, char* argv[])
 	const char *SendeText = "TCP-Verbindungsaufbau erfolgreich!\n";
 
 #ifdef WIN32
+	int				Fehlerkode;			// Hilfsvariable zum Speichern eines Fehlerkodes
 	WSADATA			wsaData;			// Speichert Winsock-Initialisierungsinfo
     WORD wVersionRequested;				// Speichert die gewünschte Version der Winsock-
 										// DLL
@@ -152,7 +152,7 @@ int main(int argc, char* argv[])
 #else
 		if(errno == EACCES) fprintf(stderr,
 			"For Unix domain sockets, which are identified by pathname: Write permission is denied on the socket file, or search permission is denied for one of the directories in the path prefix. (See also path_resolution(2).)\n");
-		if(errno == EACCES, EPERM) fprintf(stderr,
+		if(errno == EACCES || errno == EPERM) fprintf(stderr,
 			"The user tried to connect to a broadcast address without having the socket broadcast flag enabled or the connection request failed because of a local firewall rule.\n");
 		if(errno == EADDRINUSE) fprintf(stderr,
 			"Local address is already in use.\n");
