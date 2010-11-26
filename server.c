@@ -218,7 +218,7 @@ int main(int argc, char *argv[])
 
     visits++;
     sprintf(SendBuf, "Dieser Server wurde %d mal besucht!\n", visits);
-    string_len = static_cast<int>(strlen(SendBuf));
+    string_len = strlen(SendBuf);
     send(sd_client, SendBuf, string_len, 0);
 
 // Empfangene Daten lesen, in RecvBuf schreiben ...
