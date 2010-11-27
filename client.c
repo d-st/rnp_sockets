@@ -1,3 +1,4 @@
+//
 // RN_P_Beispielclient.cpp : Definiert den Einstiegspunkt für die Konsolenanwendung.
 //
 #ifdef WIN32
