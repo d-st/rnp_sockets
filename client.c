@@ -123,11 +123,8 @@ int main(int argc, char* argv[])
 
 // Aktiver Verbindungsaufbau zum Server
 	if (connect(sd, (struct sockaddr *)&sad, sizeof(sad)) == SOCKET_ERROR) {
-#ifdef WIN32
-		fprintf_s(stdout,"Fehler beim TCP-Verbindungsaufbau: %ld\n", WSAGetLastError());
+		RNP_Error(RNP_E_CONN, "Fehler beim TCP-Verbindungsaufbau");
 		RNP_Cleanup();
-#else
-#endif
 		exit(EXIT_FAILURE);}
 
 // Empfangene Daten lesen und auf dem Bildschirm schreiben
