@@ -5,8 +5,6 @@
   #incude <winsock.h>
   #include "stdafx.h"
 #else
-  #include <stdio.h>
-  #include <stdlib.h>
   #include <unistd.h>
   #include <sys/socket.h>
   #include <netinet/in.h>
@@ -101,67 +99,34 @@ int main(int argc, char *argv[])
     sad.sin_port = htons(port);	// Host --> Netzwerk-Byteordnung
   else {			// Drucke Fehlermeldung; Programmende
     fprintf(stdout, "Ungültige Portnummer %s\n", argv[1]);
-#ifdef WIN32
-    WSACleanup();
-#endif
+    RNP_Cleanup();
     exit(EXIT_FAILURE);
   }
 
   if ((ptrp = getprotobyname("tcp")) == NULL) {	// "tcp" --> Protokollcode
     fprintf(stdout,
 	    "Abbildung von \"tcp\" auf Protokollnummer nicht möglich!");
-#ifdef WIN32
-    WSACleanup();
-#endif
+    RNP_Cleanup();
     exit(EXIT_FAILURE);
   }
 // Erzeuge Socket
   sd_accept = socket(PF_INET, SOCK_STREAM, ptrp->p_proto);
   if (sd_accept == INVALID_SOCKET) {
-#ifdef WIN32
-    fprintf_s(stdout, "Fehler bei Generierung von Socket: %d\n",
-	      WSAGetLastError());
-    WSACleanup();
-#else
-	
-#endif
+	RNP_Error(RNP_E_SOCK, "Fehler bei Generierung von Socket");
+    RNP_Cleanup();
     exit(EXIT_FAILURE);
   }
 // Initialisiere Socket mit (Rechneradress, Portnummer) des Servers
   if (bind(sd_accept, (struct sockaddr *) &sad, sizeof(sad)) ==
       SOCKET_ERROR) {
-#ifdef WIN32
-    fprintf_s(stdout, "bind-Fehler: %d\n", WSAGetLastError());
-    WSACleanup();
-#else
-	if(errno == EACCES) fprintf(stderr,
-		"The address is protected, and the user is not the superuser.\n");
-	if(errno == EADDRINUSE) fprintf(stderr,
-		"The given address is already in use.\n");
-	if(errno == EBADF) fprintf(stderr,
-		"sockfd is not a valid descriptor.\n");
-	if(errno == EINVAL) fprintf(stderr,
-		"The socket is already bound to an address.\n");
-	if(errno == ENOTSOCK) fprintf(stderr,
-		"sockfd is a descriptor for a file, not a socket.\n");
-#endif
+	RNP_Error(RNP_E_BIND, "bind-Fehler");
+    RNP_Cleanup();
     exit(EXIT_FAILURE);
   }
 // Lege Länge der Backlog-Warteschlange fest
   if (listen(sd_accept, QLEN) == SOCKET_ERROR) {
-#ifdef WIN32
-    fprintf_s(stdout, "listen-Fehler: %d\n", WSAGetLastError());
-    WSACleanup();
-#else
-	if(errno == EADDRINUSE) fprintf(stderr,
-		"Another socket is already listening on the same port.\n");
-	if(errno == EBADF) fprintf(stderr,
-		"The argument sockfd is not a valid descriptor.\n");
-	if(errno == ENOTSOCK) fprintf(stderr,
-		"The argument sockfd is not a socket.\n");
-	if(errno == EOPNOTSUPP) fprintf(stderr,
-		"The socket is not of a type that supports the listen() operation.\n");
-#endif
+	RNP_Error(RNP_E_LSTN, "listen-Fehler");
+    RNP_Cleanup();
     exit(EXIT_FAILURE);
   }
 // Hauptschleife: Annahme und Bearbeitung von Verbindungswünschen
@@ -169,38 +134,8 @@ int main(int argc, char *argv[])
     struct_size = sizeof(cad);
     if ((sd_client = accept(sd_accept, (struct sockaddr *) &cad,
 		&struct_size)) == INVALID_SOCKET) {
-#ifdef WIN32
-      fprintf_s(stdout, "accept-Fehler: %d\n", WSAGetLastError());
-	  WSACleanup();
-#else
-		if(errno == EAGAIN || errno == EWOULDBLOCK) fprintf(stderr,
-			"The socket is marked non-blocking and no connections are present to be accepted.\n");
-		if(errno == EBADF) fprintf(stderr,
-			"The descriptor is invalid.\n");
-		if(errno == ECONNABORTED) fprintf(stderr,
-			"A connection has been aborted.\n");
-		if(errno == EINTR) fprintf(stderr,
-			"The system call was interrupted by a signal that was caught before a valid connection arrived.\n");
-		if(errno == EINVAL) fprintf(stderr,
-			"Socket is not listening for connections, or addrlen is invalid (e.g., is negative).\n");
-		if(errno == EMFILE) fprintf(stderr,
-			"The per-process limit of open file descriptors has been reached.\n");
-		if(errno == ENFILE) fprintf(stderr,
-			"The system limit on the total number of open files has been reached.\n");
-		if(errno == ENOTSOCK) fprintf(stderr,
-			"The descriptor references a file, not a socket.\n");
-		if(errno == EOPNOTSUPP) fprintf(stderr,
-			"The referenced socket is not of type SOCK_STREAM.\n");
-		if(errno == EFAULT) fprintf(stderr,
-			"The addr argument is not in a writable part of the user address space.\n");
-		if(errno == ENOBUFS || errno == ENOMEM) fprintf(stderr,
-			"Not enough free memory. This often means that the memory allocation is limited by the socket buffer limits, not by the system memory.\n");
-		if(errno == EPROTO) fprintf(stderr,
-			"Protocol error.\n");
-		// Linux accept() only
-		if(errno == EPERM) fprintf(stderr,
-			"Firewall rules forbid connection.\n");
-#endif
+      RNP_Error(RNP_E_ACPT, "accept-Fehler");
+	  RNP_Cleanup();
       exit(EXIT_FAILURE);
     }
 
@@ -223,8 +158,6 @@ int main(int argc, char *argv[])
 #endif
   } // Hauptschleife
 
-#ifdef WIN32
-    WSACleanup();
-#endif
+  RNP_Cleanup();
   exit(EXIT_SUCCESS);
 }				// main
