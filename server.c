@@ -10,13 +10,14 @@
   #include <unistd.h>
   #include <sys/socket.h>
   #include <netinet/in.h>
-  #include <errno.h>
   #include <netdb.h>
   #include <string.h>
   #define SOCKET int
   #define INVALID_SOCKET (-1)
   #define SOCKET_ERROR (-1)
 #endif
+
+#include "serror.h"
 
 #define PROTOPORT		5000	// Default Portnummer
 #define QLEN			6	// Länge der Backlog-Warteschlange
@@ -122,20 +123,7 @@ int main(int argc, char *argv[])
 	      WSAGetLastError());
     WSACleanup();
 #else
-	if(errno == EACCES) fprintf(stderr,
-		"Permission to create a socket of the specified type and/or protocol is denied.\n");
-	if(errno == EAFNOSUPPORT) fprintf(stderr,
-		"The implementation does not support the specified address family.\n");
-	if(errno == EINVAL) fprintf(stderr,
-		"Unknown protocol, or protocol family not available.\n");
-	if(errno == EMFILE) fprintf(stderr,
-		"Process file table overflow.\n");
-	if(errno == ENFILE) fprintf(stderr,
-		"The system limit on the total number of open files has been reached.\n");
-	if(errno == ENOBUFS || errno == ENOMEM) fprintf(stderr,
-		"Insufficient memory is available. The socket cannot be created until sufficient resources are freed.\n");
-	if(errno == EPROTONOSUPPORT) fprintf(stderr,
-		"The protocol type or the specified protocol is not supported within this domain.\n");
+	
 #endif
     exit(EXIT_FAILURE);
   }

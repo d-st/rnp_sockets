@@ -7,6 +7,8 @@ CFLAGS = -Wall
 LDFLAGS = 
 LDLIBS = 
 
+COMMON = serror.c
+COMMONOBJS = $(patsubst %.c,%.o,$(COMMON))
 SERVERSRCS = server.c
 CLIENTSRCS = client.c
 SERVEROBJS = $(patsubst %.c,%.o,$(SERVERSRCS))
@@ -18,10 +20,10 @@ CLIENTBIN = client
 
 all:		$(SERVERBIN) $(CLIENTBIN)
 
-$(SERVERBIN):		$(SERVEROBJS)
+$(SERVERBIN):		$(SERVEROBJS) $(COMMONOBJS)
 		$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-$(CLIENTBIN):		$(CLIENTOBJS)
+$(CLIENTBIN):		$(CLIENTOBJS) $(COMMONOBJS)
 		$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 %.o:		%.c
