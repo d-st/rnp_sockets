@@ -16,14 +16,21 @@ CLIENTOBJS = $(patsubst %.c,%.o,$(CLIENTSRCS))
 SERVERBIN = server
 CLIENTBIN = client
 
+NTPSRCS = ntpclient.c
+NTPOBJS =  $(patsubst %.c,%.o,$(NTPSRCS))
+NTPCLIENT = ntpclient
+
 .PHONY:		all tests depend clean dist-clean
 
-all:		$(SERVERBIN) $(CLIENTBIN)
+all:		$(SERVERBIN) $(CLIENTBIN) $(NTPCLIENT)
 
 $(SERVERBIN):		$(SERVEROBJS) $(COMMONOBJS)
 		$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 $(CLIENTBIN):		$(CLIENTOBJS) $(COMMONOBJS)
+		$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+
+$(NTPCLIENT):		$(NTPOBJS) $(COMMONOBJS)
 		$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 %.o:		%.c
