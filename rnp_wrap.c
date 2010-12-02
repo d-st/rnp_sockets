@@ -1,14 +1,45 @@
 ﻿#include "rnp_wrap.h"
-#include <stdio.h>
 
+
+void RNP_Init() {
 #ifdef WIN32
-  #include <WinSock2.h>
+	int				Fehlerkode;			// Hilfsvariable zum Speichern eines Fehlerkodes
+	WSADATA			wsaData;			// Speichert Winsock-Initialisierungsinfo
+    WORD wVersionRequested;				// Speichert die gewünschte Version der Winsock-DLL
+	wVersionRequested = MAKEWORD(2, 2);
+	
+	// Initialisierung der Winsock-DLL	
+	Fehlerkode = WSAStartup(wVersionRequested, &wsaData);
+	if (Fehlerkode != NO_ERROR){
+		fprintf_s(stdout, "Initialisierung der Winsock-DLL fehlgeschlagen: %i\n", Fehlerkode);
+	}
 #endif
-
+}
 
 void RNP_Cleanup() {
 #ifdef WIN32
 	WSACleanup();
+#endif
+}
+
+void RNP_Close(SOCKET sd) {
+#ifdef WIN32
+// Socket schließen und von der Winsock-DLL reservierten Ressourcen freigeben 
+	closesocket(sd);
+	RNP_Cleanup();
+// Programm mit Tastendruck beenden
+	fprintf_s(stdout,"Beenden mit Tastendruck!\n" );
+	while(!_kbhit()); 
+#else
+	close(sd);
+#endif
+}
+
+int RNP_copy_hostaddr_to_sockaddr(struct sockaddr_in * sad, struct hostent * host) {
+#ifdef WIN32
+	return memcpy_s(&(sad->sin_addr), AF_INET_LEN, host->h_addr, host->h_length);
+#else
+	return memcpy(&(sad->sin_addr), host->h_addr, AF_INET_LEN) == NULL;
 #endif
 }
 
