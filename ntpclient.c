@@ -36,7 +36,7 @@ typedef unsigned long digest;   /* md5 digest */
 typedef signed char s_char;     /* precision and poll interval (log2) */
 
 typedef struct tx {
-        char    cruft;          /* leap indicator: 2bit, version number: 3bit, mode: 3bit */
+        char    flags;          /* leap indicator: 2bit, version number: 3bit, mode: 3bit */
         char    stratum;        /* stratum */
         char    poll;           /* poll interval */
         s_char  precision;      /* precision */
@@ -132,14 +132,8 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
-/*
-	memcpy (&dest_addr.sa_data, host->h_addr, AF_INET_LEN); // TODO: errorcheck
-	dest_addr.sa_family = AF_INET;
-	dest_addr.sa_len = AF_INET_LEN;
-*/
-
 // ntp-packet vorbereiten
-	ntp_packet.cruft = 0<<6|4<<3|3;/* li=0, v=4, mode=3 */
+	ntp_packet.flags = 0<<6|4<<3|3;/* li=0, v=4, mode=3 */
 	ntp_packet.stratum = 0;        /* stratum */
 	ntp_packet.poll = 0;           /* poll interval */
 	ntp_packet.precision = 0;      /* precision */
