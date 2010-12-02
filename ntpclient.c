@@ -3,8 +3,9 @@
 //
 
 #ifdef WIN32
-  #incude <winsock.h>
   #include "stdafx.h"
+  #include <winsock.h>
+  #include <conio.h>
 #else
   #include <unistd.h>
   #include <sys/socket.h>
@@ -57,11 +58,11 @@ int main(int argc, char* argv[])
 	struct hostent		*host;				// Speichert den Namen des Clientrechners
 	struct protoent		*protocol;				// Speichert den Namen des Transp.Protok.
 	struct sockaddr_in		sad;				// Speichert die Serveradresse
-	struct sockaddr dest_addr;
+//	struct sockaddr dest_addr;
 	SOCKET			sd;					// Socket Descriptor
 	unsigned short	port;				// Portnummer des Servers
 	char			*hostname;				// Host Name static_cast<void*>
-//	int				n;					// Anzahl empfangener Bytes
+	int				n;					// Anzahl empfangener Bytes
 //	char			RecvBuf[1000];		// Puffer für Empfangsdaten
 
 	NtpPacket	ntp_packet;
@@ -131,10 +132,11 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
+/*
 	memcpy (&dest_addr.sa_data, host->h_addr, AF_INET_LEN); // TODO: errorcheck
 	dest_addr.sa_family = AF_INET;
 	dest_addr.sa_len = AF_INET_LEN;
-
+*/
 
 // ntp-packet vorbereiten
 	ntp_packet.cruft = 0<<6|4<<3|3;/* li=0, v=4, mode=3 */
@@ -152,9 +154,8 @@ int main(int argc, char* argv[])
 	ntp_packet.dgst = 0;           /* message digest */
 
 // Eine Nachricht an den Server senden
-	int i;
-	if ((i=sendto(sd, &ntp_packet, sizeof(ntp_packet), NO_FLAGS, (struct sockaddr *)&sad, sizeof(sad))) < 0) {
-		fprintf(stdout, "Fehler beim Senden: %d\n", i);
+	if ((n = sendto(sd, &ntp_packet, sizeof(ntp_packet), NO_FLAGS, (struct sockaddr *)&sad, sizeof(sad))) < 0) {
+		fprintf(stdout, "Fehler beim Senden: %d\n", n);
 	}
 
 // Empfangene Daten lesen und auf dem Bildschirm schreiben

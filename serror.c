@@ -1,4 +1,10 @@
 #include "serror.h"
+#include <stdio.h>
+
+#ifdef WIN32
+  #include <WinSock2.h>
+#endif
+
 
 void RNP_Cleanup() {
 #ifdef WIN32

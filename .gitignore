@@ -2,3 +2,6 @@ server
 client
 ntpclient
 .DS_Store
+Debug/
+*.o
+rnp_sockets.suo
