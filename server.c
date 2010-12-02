@@ -15,7 +15,7 @@
   #define SOCKET_ERROR (-1)
 #endif
 
-#include "serror.h"
+#include "rnp_wrap.h"
 
 #define PROTOPORT		5000	// Default Portnummer
 #define QLEN			6	// Länge der Backlog-Warteschlange

@@ -16,7 +16,7 @@
   #define SOCKET_ERROR (-1)
 #endif
 
-#include "serror.h"
+#include "rnp_wrap.h"
 
 #define NO_FLAGS 0
 

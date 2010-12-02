@@ -1,4 +1,4 @@
-//
+﻿//
 // simpler NTP client im Rahmen des RNP
 //
 
@@ -17,7 +17,7 @@
   #define SOCKET_ERROR (-1)
 #endif
 
-#include "serror.h"
+#include "rnp_wrap.h"
 
 #define JAN_1970        2208988800UL /* 1970 - 1900 in seconds */
 #define NO_FLAGS 0
@@ -70,8 +70,7 @@ int main(int argc, char* argv[])
 #ifdef WIN32
 	int				Fehlerkode;			// Hilfsvariable zum Speichern eines Fehlerkodes
 	WSADATA			wsaData;			// Speichert Winsock-Initialisierungsinfo
-    WORD wVersionRequested;				// Speichert die gewünschte Version der Winsock-
-										// DLL
+    WORD wVersionRequested;				// Speichert die gewünschte Version der Winsock-DLL
 	wVersionRequested = MAKEWORD(2, 2);
 // Initialisierung der Winsock-DLL	
 	Fehlerkode = WSAStartup(wVersionRequested, &wsaData);

@@ -1,5 +1,5 @@
-#ifndef SERROR_H
-#define SERROR_H
+#ifndef _RNP_WRAP_H_
+#define _RNP_WRAP_H_
 
 #ifndef WIN32
 	#include <errno.h>

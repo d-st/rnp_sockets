@@ -7,7 +7,7 @@ CFLAGS = -Wall
 LDFLAGS = 
 LDLIBS = 
 
-COMMON = serror.c
+COMMON = rnp_wrap.c
 COMMONOBJS = $(patsubst %.c,%.o,$(COMMON))
 SERVERSRCS = server.c
 CLIENTSRCS = client.c

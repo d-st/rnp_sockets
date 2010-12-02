@@ -24,6 +24,9 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="rnp_wrap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -32,7 +35,7 @@
     <ClCompile Include="ntpclient.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="serror.c">
+    <ClCompile Include="rnp_wrap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
